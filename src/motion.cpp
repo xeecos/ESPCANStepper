@@ -1,10 +1,12 @@
 #include "motion.h"
+#include "stepper.h"
 #include "utils.h"
 #include <Arduino.h>
 static hw_timer_t *_timer = NULL;
 uint32_t _speed = 0;
 uint32_t _max_speed = 0;
 uint32_t _acceleration = 0;
+uint32_t _position = 0;
 uint32_t _accel_distance;
 uint32_t _distance;
 uint32_t _deaccel_distance;
@@ -25,16 +27,43 @@ void _motion_run()
 void _motion_recalc()
 {
     int _interval = 10000;
-    
+    if (_position < _accel_distance)
+    {
+        _speed = sqrt_int(2 * _acceleration + _speed * _speed);
+    }
+    else if (_position > _distance - _deaccel_distance)
+    {
+        _speed += sqrt_int(_speed * _speed - 2 * _acceleration);
+    }
+    else
+    {
+    }
+    _interval = 1000000 / _speed;
+    _position++;
+    stepper_step();
     timerAlarmWrite(_timer, _interval, true);
 }
 
-void motion_add(uint32_t acceleration, uint32_t accel_distance, uint32_t total_distance, uint32_t deaccel_distance, uint16_t power, int16_t pwm)
+void motion_add(int32_t acceleration, uint32_t accel_distance, uint32_t total_distance, uint32_t deaccel_distance)
 {
-    _acceleration = acceleration;
+    _position = 0;
+    if(acceleration>0)
+    {
+        _acceleration = acceleration;
+        stepper_set_direction(false);
+    }
+    else
+    {
+        _acceleration = -acceleration;
+        stepper_set_direction(true);
+    }
     _accel_distance = accel_distance;
     _distance = total_distance;
     _deaccel_distance = deaccel_distance;
+}
+void motion_add(uint16_t power, int16_t pwm)
+{
+
 }
 uint32_t motion_get_speed()
 {
