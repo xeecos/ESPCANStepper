@@ -48,10 +48,9 @@ int32_t stepper_get_position()
 {
     return _current_position;
 } 
-void stepper_step(bool dir)
+void stepper_step()
 {
-    _current_position += dir ? 1 : -1;
-    stepper_set_direction(dir);
+    _current_position += _dir ? 1 : -1;
     digitalWrite(STEP_PIN, _step_status);
     _step_status = !_step_status;
 }

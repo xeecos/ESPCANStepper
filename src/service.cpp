@@ -3,6 +3,7 @@
 #include "stepper.h"
 #include "laser.h"
 #include "motor.h"
+#include "motion.h"
 #include "canbus.h"
 #include "log.h"
 void service_init()
@@ -12,6 +13,7 @@ void service_init()
     laser_init();
     motor_init();
     stepper_init();
+    motion_init();
 }
 void service_run()
 {
