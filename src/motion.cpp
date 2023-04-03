@@ -27,26 +27,28 @@ void _motion_run()
 void _motion_recalc()
 {
     int _interval = 10000;
-    if (_position < _accel_distance)
+    if(_position < _distance)
     {
-        _speed = sqrt_int(2 * _acceleration + _speed * _speed);
+        if (_position < _accel_distance)
+        {
+            _speed = sqrt_int(2 * _acceleration + _speed * _speed);
+        }
+        else if (_position > _distance - _deaccel_distance)
+        {
+            _speed += sqrt_int(_speed * _speed - 2 * _acceleration);
+        }
+        else
+        {
+        }
+        _interval = 1000000 / _speed;
+        _position++;
+        stepper_step();
     }
-    else if (_position > _distance - _deaccel_distance)
-    {
-        _speed += sqrt_int(_speed * _speed - 2 * _acceleration);
-    }
-    else
-    {
-    }
-    _interval = 1000000 / _speed;
-    _position++;
-    stepper_step();
     timerAlarmWrite(_timer, _interval, true);
 }
 
-void motion_add(int32_t acceleration, uint32_t accel_distance, uint32_t total_distance, uint32_t deaccel_distance)
+void motion_set_acceleration(int32_t acceleration)
 {
-    _position = 0;
     if(acceleration>0)
     {
         _acceleration = acceleration;
@@ -57,14 +59,37 @@ void motion_add(int32_t acceleration, uint32_t accel_distance, uint32_t total_di
         _acceleration = -acceleration;
         stepper_set_direction(true);
     }
-    _accel_distance = accel_distance;
-    _distance = total_distance;
-    _deaccel_distance = deaccel_distance;
 }
-void motion_add(uint16_t power, int16_t pwm)
+void motion_set_accel_distance(uint32_t distance)
 {
-
+    _accel_distance = distance;
 }
+void motion_set_deaccel_distance(uint32_t distance)
+{
+    _deaccel_distance = distance;
+}
+void motion_set_total_distance(uint32_t distance)
+{
+    _position = distance;
+    _distance = distance;
+}
+void motion_start()
+{
+    _position = 0;
+}
+void motion_stop()
+{
+    
+}
+void motion_set_power(uint16_t power)
+{
+    
+}
+void motion_set_pwm(int16_t pwm)
+{
+    
+}
+
 uint32_t motion_get_speed()
 {
     return _speed;

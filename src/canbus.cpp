@@ -1,6 +1,7 @@
 #include "canbus.h"
 #include "config.h"
-
+#include "utils.h"
+#include "motion.h"
 void canbus_init()
 {
     twai_general_config_t g_config = TWAI_GENERAL_CONFIG_DEFAULT((gpio_num_t)CAN_TX, (gpio_num_t)CAN_RX, TWAI_MODE_NORMAL);
@@ -30,8 +31,146 @@ bool canbus_available()
 void canbus_receive()
 {
     int canid = canbus_message.identifier;
-    switch (canid)
+    
+    if(canid==CID_MOTION_START)
     {
+        motion_start();
+    }
+    else if(canid==CID_MOTION_STOP)
+    {
+        motion_stop();
+    }
+    else
+    {
+        switch (canid)
+        {
+            #if ENABLE_AXIS_X==1
+            case CID_X_ACCELRATION:
+            {
+                Long2Bytes lv;
+                lv.bytes[0] = canbus_message.data[0];
+                lv.bytes[1] = canbus_message.data[1];
+                lv.bytes[2] = canbus_message.data[2];
+                lv.bytes[3] = canbus_message.data[3];
+                motion_set_acceleration(lv.longValue);
+            }
+            break;
+            case CID_X_ACCEL_DISTANCE:
+            {
+                Uint2Bytes lv;
+                lv.bytes[0] = canbus_message.data[0];
+                lv.bytes[1] = canbus_message.data[1];
+                lv.bytes[2] = canbus_message.data[2];
+                lv.bytes[3] = canbus_message.data[3];
+                motion_set_accel_distance(lv.uint32Value);
+            }
+            break;
+            case CID_X_DEACCEL_DISTANCE:
+            {
+                Uint2Bytes lv;
+                lv.bytes[0] = canbus_message.data[0];
+                lv.bytes[1] = canbus_message.data[1];
+                lv.bytes[2] = canbus_message.data[2];
+                lv.bytes[3] = canbus_message.data[3];
+                motion_set_deaccel_distance(lv.uint32Value);
+            }
+            break;
+            case CID_X_TOTAL_DISTANCE:
+            {
+                Uint2Bytes lv;
+                lv.bytes[0] = canbus_message.data[0];
+                lv.bytes[1] = canbus_message.data[1];
+                lv.bytes[2] = canbus_message.data[2];
+                lv.bytes[3] = canbus_message.data[3];
+                motion_set_total_distance(lv.uint32Value);
+            }
+            break;
+            #endif
+            #if ENABLE_AXIS_Y==1
+            case CID_Y_ACCELRATION:
+            {
+                Long2Bytes lv;
+                lv.bytes[0] = canbus_message.data[0];
+                lv.bytes[1] = canbus_message.data[1];
+                lv.bytes[2] = canbus_message.data[2];
+                lv.bytes[3] = canbus_message.data[3];
+                motion_set_acceleration(lv.longValue);
+            }
+            break;
+            case CID_Y_ACCEL_DISTANCE:
+            {
+                Uint2Bytes lv;
+                lv.bytes[0] = canbus_message.data[0];
+                lv.bytes[1] = canbus_message.data[1];
+                lv.bytes[2] = canbus_message.data[2];
+                lv.bytes[3] = canbus_message.data[3];
+                motion_set_accel_distance(lv.uint32Value);
+            }
+            break;
+            case CID_Y_DEACCEL_DISTANCE:
+            {
+                Uint2Bytes lv;
+                lv.bytes[0] = canbus_message.data[0];
+                lv.bytes[1] = canbus_message.data[1];
+                lv.bytes[2] = canbus_message.data[2];
+                lv.bytes[3] = canbus_message.data[3];
+                motion_set_deaccel_distance(lv.uint32Value);
+            }
+            break;
+            case CID_Y_TOTAL_DISTANCE:
+            {
+                Uint2Bytes lv;
+                lv.bytes[0] = canbus_message.data[0];
+                lv.bytes[1] = canbus_message.data[1];
+                lv.bytes[2] = canbus_message.data[2];
+                lv.bytes[3] = canbus_message.data[3];
+                motion_set_total_distance(lv.uint32Value);
+            }
+            break;
+            #endif
+            #if ENABLE_AXIS_Z==1
+            case CID_Z_ACCELRATION:
+            {
+                Long2Bytes lv;
+                lv.bytes[0] = canbus_message.data[0];
+                lv.bytes[1] = canbus_message.data[1];
+                lv.bytes[2] = canbus_message.data[2];
+                lv.bytes[3] = canbus_message.data[3];
+                motion_set_acceleration(lv.longValue);
+            }
+            break;
+            case CID_Z_ACCEL_DISTANCE:
+            {
+                Uint2Bytes lv;
+                lv.bytes[0] = canbus_message.data[0];
+                lv.bytes[1] = canbus_message.data[1];
+                lv.bytes[2] = canbus_message.data[2];
+                lv.bytes[3] = canbus_message.data[3];
+                motion_set_accel_distance(lv.uint32Value);
+            }
+            break;
+            case CID_Z_DEACCEL_DISTANCE:
+            {
+                Uint2Bytes lv;
+                lv.bytes[0] = canbus_message.data[0];
+                lv.bytes[1] = canbus_message.data[1];
+                lv.bytes[2] = canbus_message.data[2];
+                lv.bytes[3] = canbus_message.data[3];
+                motion_set_deaccel_distance(lv.uint32Value);
+            }
+            break;
+            case CID_Z_TOTAL_DISTANCE:
+            {
+                Uint2Bytes lv;
+                lv.bytes[0] = canbus_message.data[0];
+                lv.bytes[1] = canbus_message.data[1];
+                lv.bytes[2] = canbus_message.data[2];
+                lv.bytes[3] = canbus_message.data[3];
+                motion_set_total_distance(lv.uint32Value);
+            }
+            break;
+            #endif
+        }
     }
 }
 

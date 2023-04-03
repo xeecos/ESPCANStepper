@@ -17,3 +17,9 @@
 
 #define MICROSTEPS         32
 #define STEPS_PER_MM      100
+
+#define ENABLE_AXIS_X       1
+#define ENABLE_AXIS_Y       0
+#define ENABLE_AXIS_Z       0
+#define ENABLE_LASER        0
+#define ENABLE_MOTOR        0

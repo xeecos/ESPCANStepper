@@ -4,8 +4,10 @@
 #include "laser.h"
 #include "motor.h"
 #include "canbus.h"
+#include "log.h"
 void service_init()
 {
+    LOG_INIT(115200);
     canbus_init();
     laser_init();
     motor_init();

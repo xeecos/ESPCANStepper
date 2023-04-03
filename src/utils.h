@@ -9,9 +9,27 @@
 #ifndef M_PI_2
 #define M_PI_2     1.57079632679489661923   // pi/2
 #endif
-union float2bytes
+
+union Long2Bytes
 {
-    float v;
+    int32_t longValue;
+    uint8_t bytes[4];
+};
+
+union Uint2Bytes
+{
+    uint32_t uint32Value;
+    uint8_t bytes[4];
+};
+union Float2Bytes
+{
+    float floatValue;
+    uint8_t bytes[4];
+};
+
+union Double2Bytes
+{
+    double doubleValue;
     uint8_t bytes[4];
 };
 
